@@ -1,10 +1,12 @@
 package com.israel.expensemanager.services;
 
 import com.israel.expensemanager.dtos.ExpensesDTO;
+import com.israel.expensemanager.dtos.UpdateDTO;
 import com.israel.expensemanager.models.ExpensesModel;
 import com.israel.expensemanager.repositories.ExpensesRepository;
 import com.israel.expensemanager.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +21,11 @@ public class ExpensesService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ExpensesModel saveExpense(ExpensesDTO expensesDTO) {
+    public ExpensesModel saveExpense(ExpensesDTO data, UUID userId) {
         ExpensesModel expense = new ExpensesModel();
-        expense.setExpense(expensesDTO.expense());
-        expense.setPrice(expensesDTO.price());
-        expense.setUser(userRepository.findById(expensesDTO.userId())
+        expense.setExpense(data.expense());
+        expense.setPrice(data.price());
+        expense.setUser(userRepository.findById(userId)
                         .orElseThrow(() -> new RuntimeException("user not found")));
         expense.setDate(LocalDateTime.now());
 
@@ -42,14 +44,16 @@ public class ExpensesService {
     }
 
     @Transactional
-    public ExpensesModel updateExpense(ExpensesDTO expensesDTO, UUID expenseId) {
-        ExpensesModel expense = expensesRepository.findById(expenseId)
-                .orElseThrow(() -> new RuntimeException("expense id not found"));
+    public ExpensesModel updateExpense(UUID oldExpense ,UUID loggedUserID,UpdateDTO data) {
+        ExpensesModel expense = expensesRepository.findById(oldExpense)
+                .orElseThrow(() -> new RuntimeException("expense not found"));
 
-        expense.setExpense(expensesDTO.expense());
-        expense.setPrice(expensesDTO.price());
-        expense.setUser(userRepository.findById(expensesDTO.userId())
-                .orElseThrow(() -> new RuntimeException("user not found")));
+        if(!expense.getUser().getId().equals(loggedUserID)) {
+            throw new AccessDeniedException("you don't have access to this expense");
+        }
+
+        expense.setExpense(data.expense());
+        expense.setPrice(data.price());
 
         return expensesRepository.save(expense);
     }
@@ -58,12 +62,12 @@ public class ExpensesService {
     @Transactional
     public void deleteExpense(UUID expenseId, UUID loggedUserId) {
         ExpensesModel expense = expensesRepository.findById(expenseId)
-                .orElseThrow(() -> new RuntimeException("expense id not found"));
+                .orElseThrow(() ->  new RuntimeException("expense id not found"));
 
         if(!expense.getUser().getId().equals(loggedUserId)) {
-            throw new RuntimeException("you don't have access to this expense");
+            throw new org.springframework.security.access.AccessDeniedException("you don't have access to this expense");
         }
 
-        expensesRepository.deleteById(expenseId);
+        expensesRepository.delete(expense);
     }
 }

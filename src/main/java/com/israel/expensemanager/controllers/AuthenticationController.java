@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +26,7 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private  final TokenService tokenService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO data) {
@@ -38,14 +39,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserModel> register(@RequestBody RegisterDTO data) {
-        if(this.userRepository.findByName(data.name()) != null)
+    public ResponseEntity<Void> register(@RequestBody RegisterDTO data) {
+        if(this.userRepository.findByName(data.name()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserModel newUser = new UserModel(data.name(), encryptedPassword, data.role());
+        }
+
+        UserModel newUser = new UserModel(data.name(), passwordEncoder.encode(data.password()), data.role());
 
         this.userRepository.save(newUser);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
