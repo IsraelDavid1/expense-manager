@@ -1,10 +1,9 @@
 package com.israel.expensemanager.controllers;
 
-import com.israel.expensemanager.dtos.ExpensesRecordDto;
+import com.israel.expensemanager.dtos.ExpensesDTO;
 import com.israel.expensemanager.models.ExpensesModel;
 import com.israel.expensemanager.services.ExpensesService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +13,13 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/")
+@RequestMapping("/manager")
 public class ExpensesController {
     private final ExpensesService expensesService;
 
     @PostMapping
-    public ResponseEntity<ExpensesModel> saveExpense(@RequestBody ExpensesRecordDto expensesRecordDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(expensesService.saveExpense(expensesRecordDto));
+    public ResponseEntity<ExpensesModel> saveExpense(@RequestBody ExpensesDTO data) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(expensesService.saveExpense(data));
     }
 
     @GetMapping("/sum")
