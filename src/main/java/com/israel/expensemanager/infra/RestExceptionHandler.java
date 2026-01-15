@@ -11,13 +11,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ExpenseIdNotFoundException.class)
-    private ResponseEntity<RestErrorMessage> expenseIdNotFoundHandler(ExpenseIdNotFoundException exception) {
+    public ResponseEntity<RestErrorMessage> expenseIdNotFoundHandler(ExpenseIdNotFoundException exception) {
         RestErrorMessage errorResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, "expense not found");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    private ResponseEntity<RestErrorMessage> userNotFoundHandler(UserNotFoundException exception) {
+    public ResponseEntity<RestErrorMessage> userNotFoundHandler(UserNotFoundException exception) {
         RestErrorMessage errorResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, "user not found!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
