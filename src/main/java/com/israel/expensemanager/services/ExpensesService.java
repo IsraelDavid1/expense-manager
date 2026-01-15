@@ -2,6 +2,8 @@ package com.israel.expensemanager.services;
 
 import com.israel.expensemanager.dtos.ExpensesDTO;
 import com.israel.expensemanager.dtos.UpdateDTO;
+import com.israel.expensemanager.exceptions.ExpenseIdNotFoundException;
+import com.israel.expensemanager.exceptions.UserNotFoundException;
 import com.israel.expensemanager.models.ExpensesModel;
 import com.israel.expensemanager.repositories.ExpensesRepository;
 import com.israel.expensemanager.repositories.UserRepository;
@@ -26,7 +28,7 @@ public class ExpensesService {
         expense.setExpense(data.expense());
         expense.setPrice(data.price());
         expense.setUser(userRepository.findById(userId)
-                        .orElseThrow(() -> new RuntimeException("user not found")));
+                        .orElseThrow(() -> new UserNotFoundException("user not found")));
         expense.setDate(LocalDateTime.now());
 
         return  expensesRepository.save(expense);
@@ -46,7 +48,7 @@ public class ExpensesService {
     @Transactional
     public ExpensesModel updateExpense(UUID oldExpense ,UUID loggedUserID,UpdateDTO data) {
         ExpensesModel expense = expensesRepository.findById(oldExpense)
-                .orElseThrow(() -> new RuntimeException("expense not found"));
+                .orElseThrow(() -> new ExpenseIdNotFoundException("expense id not found"));
 
         if(!expense.getUser().getId().equals(loggedUserID)) {
             throw new AccessDeniedException("you don't have access to this expense");
@@ -62,7 +64,7 @@ public class ExpensesService {
     @Transactional
     public void deleteExpense(UUID expenseId, UUID loggedUserId) {
         ExpensesModel expense = expensesRepository.findById(expenseId)
-                .orElseThrow(() ->  new RuntimeException("expense id not found"));
+                .orElseThrow(() ->  new ExpenseIdNotFoundException("expense id not found"));
 
         if(!expense.getUser().getId().equals(loggedUserId)) {
             throw new org.springframework.security.access.AccessDeniedException("you don't have access to this expense");

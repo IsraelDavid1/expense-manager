@@ -1,5 +1,6 @@
 package com.israel.expensemanager.services;
 
+import com.israel.expensemanager.exceptions.UserNotFoundException;
 import com.israel.expensemanager.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -16,6 +17,7 @@ public class AuthorizationService implements UserDetailsService {
     @Override
     @NonNull
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        return userRepository.findByName(username);
+        return userRepository.findByName(username)
+                .orElseThrow(() -> new UserNotFoundException("user not found"));
     }
 }
