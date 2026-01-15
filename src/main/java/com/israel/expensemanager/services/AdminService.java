@@ -28,6 +28,6 @@ public class AdminService {
         UserModel user = userRepository.findByName(userToDelete)
                 .orElseThrow(() -> new UserNotFoundException("user not found"));
 
-        userRepository.delete((UserModel) user);
+        userRepository.delete(user);
     }
 }
