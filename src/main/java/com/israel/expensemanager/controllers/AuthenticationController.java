@@ -6,6 +6,7 @@ import com.israel.expensemanager.dtos.RegisterDTO;
 import com.israel.expensemanager.infra.security.TokenService;
 import com.israel.expensemanager.models.UserModel;
 import com.israel.expensemanager.repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class AuthenticationController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO data) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.name(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
@@ -39,8 +40,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterDTO data) {
-        if(this.userRepository.findByName(data.name()) != null) {
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDTO data) {
+        if(this.userRepository.findByName(data.name()).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 

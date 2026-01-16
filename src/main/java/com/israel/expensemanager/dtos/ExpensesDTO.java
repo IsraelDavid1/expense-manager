@@ -1,9 +1,9 @@
 package com.israel.expensemanager.dtos;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import jakarta.validation.constraints.NotBlank;
 
-public record ExpensesDTO(UUID userId,
-                          String expense,
-                          BigDecimal price) {
+import java.math.BigDecimal;
+
+public record ExpensesDTO(@NotBlank String expense,
+                          @NotBlank BigDecimal price) {
 }

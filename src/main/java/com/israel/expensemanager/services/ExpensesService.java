@@ -1,6 +1,7 @@
 package com.israel.expensemanager.services;
 
 import com.israel.expensemanager.dtos.ExpensesDTO;
+import com.israel.expensemanager.dtos.ExpensesDatesDTO;
 import com.israel.expensemanager.dtos.UpdateDTO;
 import com.israel.expensemanager.exceptions.ExpenseIdNotFoundException;
 import com.israel.expensemanager.exceptions.UserNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -23,11 +25,11 @@ public class ExpensesService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ExpensesModel saveExpense(ExpensesDTO data, UUID userId) {
+    public ExpensesModel saveExpense(UUID loggedUserId, ExpensesDTO data) {
         ExpensesModel expense = new ExpensesModel();
         expense.setExpense(data.expense());
         expense.setPrice(data.price());
-        expense.setUser(userRepository.findById(userId)
+        expense.setUser(userRepository.findById(loggedUserId)
                         .orElseThrow(() -> new UserNotFoundException("user not found")));
         expense.setDate(LocalDateTime.now());
 
@@ -35,14 +37,19 @@ public class ExpensesService {
     }
 
 
-    public BigDecimal sumExpenses(UUID userId) {
-        return expensesRepository.sumAllExpensesByUser(userId);
+    public BigDecimal sumExpenses(UUID loggedUserId) {
+        return expensesRepository.sumAllExpensesByUser(loggedUserId);
     }
 
 
-    public BigDecimal moneyLeft(UUID userId, BigDecimal userTotalMoney) {
-        BigDecimal totalExpenses = expensesRepository.sumAllExpensesByUser(userId);
+    public BigDecimal moneyLeft(UUID loggedUserId, BigDecimal userTotalMoney) {
+        BigDecimal totalExpenses = expensesRepository.sumAllExpensesByUser(loggedUserId);
         return userTotalMoney.subtract(totalExpenses);
+    }
+
+
+    public List<ExpensesModel> findExpensesBetweenDates(UUID loggedUserId, ExpensesDatesDTO data) {
+        return expensesRepository.findByMonth(loggedUserId, data.beginDate(), data.lastDate());
     }
 
     @Transactional

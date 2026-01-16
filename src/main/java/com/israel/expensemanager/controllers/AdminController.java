@@ -18,8 +18,8 @@ public class AdminController {
     private final AdminService adminService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/users/{username}")
-    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal UserModel user, @PathVariable  String userToDelete) {
+    @DeleteMapping("/users/{userToDelete}")
+    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal UserModel user, @PathVariable String userToDelete) {
         adminService.deleteUser(user.getId(), userToDelete);
         return ResponseEntity.noContent().build();
     }
