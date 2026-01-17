@@ -4,6 +4,7 @@ import com.israel.expensemanager.dtos.ExpensesDTO;
 import com.israel.expensemanager.dtos.ExpensesDatesDTO;
 import com.israel.expensemanager.dtos.UpdateDTO;
 import com.israel.expensemanager.exceptions.ExpenseIdNotFoundException;
+import com.israel.expensemanager.exceptions.InvalidDateRangeException;
 import com.israel.expensemanager.exceptions.UserNotFoundException;
 import com.israel.expensemanager.models.ExpensesModel;
 import com.israel.expensemanager.repositories.ExpensesRepository;
@@ -49,6 +50,10 @@ public class ExpensesService {
 
 
     public List<ExpensesModel> findExpensesBetweenDates(UUID loggedUserId, ExpensesDatesDTO data) {
+        if(data.beginDate().isBefore(data.lastDate())) {
+            throw new InvalidDateRangeException("invalid date range");
+        }
+
         return expensesRepository.findByMonth(loggedUserId, data.beginDate(), data.lastDate());
     }
 

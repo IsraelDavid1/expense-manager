@@ -39,8 +39,8 @@ public class ExpensesController {
     }
 
     @PostMapping("/date")
-    public ResponseEntity<List<ExpensesModel>> findExpensesBetweenDates(@AuthenticationPrincipal UUID loggedUserId, @RequestBody ExpensesDatesDTO data) {
-        return ResponseEntity.status(HttpStatus.OK).body(expensesService.findExpensesBetweenDates(loggedUserId, data));
+    public ResponseEntity<List<ExpensesModel>> findExpensesBetweenDates(@AuthenticationPrincipal UserModel user, @RequestBody @Valid ExpensesDatesDTO data) {
+        return ResponseEntity.status(HttpStatus.OK).body(expensesService.findExpensesBetweenDates(user.getId(), data));
     }
 
     @PatchMapping("/{oldExpense}")

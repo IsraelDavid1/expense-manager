@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
     private final AdminService adminService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/users/{userToDelete}")
     public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal UserModel user, @PathVariable String userToDelete) {
         adminService.deleteUser(user.getId(), userToDelete);
