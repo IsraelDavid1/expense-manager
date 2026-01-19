@@ -50,7 +50,7 @@ public class ExpensesService {
 
 
     public List<ExpensesModel> findExpensesBetweenDates(UUID loggedUserId, ExpensesDatesDTO data) {
-        if(data.beginDate().isBefore(data.lastDate())) {
+        if(data.beginDate().isAfter(data.lastDate())) {
             throw new InvalidDateRangeException("invalid date range");
         }
 
