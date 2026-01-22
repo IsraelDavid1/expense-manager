@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +37,21 @@ public class ExpensesService {
         expense.setDate(LocalDateTime.now());
 
         return  expensesRepository.save(expense);
+    }
+
+
+    public List<ExpensesModel> getExpenses(UUID loggedUserId) {
+        LocalDateTime thisMonth = LocalDateTime.now();
+        LocalDateTime firstDay = thisMonth
+                .with(TemporalAdjusters.firstDayOfMonth())
+                .toLocalDate()
+                .atStartOfDay();
+        LocalDateTime lastDay = thisMonth
+                .with(TemporalAdjusters.lastDayOfMonth())
+                .toLocalDate()
+                .atTime(23,59,59);
+
+        return expensesRepository.findByMonth(loggedUserId, firstDay, lastDay);
     }
 
 

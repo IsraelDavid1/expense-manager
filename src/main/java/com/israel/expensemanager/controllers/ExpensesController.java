@@ -28,6 +28,11 @@ public class ExpensesController {
         return ResponseEntity.status(HttpStatus.CREATED).body(expensesService.saveExpense(user.getId(), data));
     }
 
+    @GetMapping
+    public ResponseEntity<List<ExpensesModel>> getExpenses(@AuthenticationPrincipal UserModel user) {
+        return ResponseEntity.status(HttpStatus.OK).body(expensesService.getExpenses(user.getId()));
+    }
+
     @GetMapping("/sum")
     public ResponseEntity<BigDecimal> sumExpenses(@AuthenticationPrincipal UserModel user) {
         return ResponseEntity.status(HttpStatus.OK).body(expensesService.sumExpenses(user.getId()));
