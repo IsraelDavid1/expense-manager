@@ -5,6 +5,7 @@ import com.israel.expensemanager.dtos.LoginResponseDTO;
 import com.israel.expensemanager.dtos.RegisterDTO;
 import com.israel.expensemanager.infra.security.TokenService;
 import com.israel.expensemanager.models.UserModel;
+import com.israel.expensemanager.models.UserRole;
 import com.israel.expensemanager.repositories.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.name(), data.password());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
         var token = tokenService.generateToken((UserModel) Objects.requireNonNull(auth.getPrincipal()));
@@ -41,11 +42,11 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterDTO data) {
-        if(this.userRepository.findByName(data.name()).isPresent()) {
+        if(this.userRepository.findByName(data.username()).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        UserModel newUser = new UserModel(data.name(), passwordEncoder.encode(data.password()), data.role());
+        UserModel newUser = new UserModel(data.username(), passwordEncoder.encode(data.password()), UserRole.USER);
 
         this.userRepository.save(newUser);
 

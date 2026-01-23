@@ -23,7 +23,7 @@ public class UserService {
         UserModel user = userRepository.findById(loggedUserId)
                 .orElseThrow(() -> new UserNotFoundException("user not found"));
 
-        user.setName(data.name());
+        user.setName(data.username());
         user.setPassword(passwordEncoder.encode(data.password()));
 
         return userRepository.save(user);
@@ -35,7 +35,7 @@ public class UserService {
         UserModel user = userRepository.findById(loggedUserId)
                 .orElseThrow(() -> new UserNotFoundException("user not found"));
 
-        if(!user.getName().equals(data.name()) || !passwordEncoder.matches(data.password(), user.getPassword())) {
+        if(!user.getName().equals(data.username()) || !passwordEncoder.matches(data.password(), user.getPassword())) {
             throw new AccessDeniedException("wrong user data");
         }
 
