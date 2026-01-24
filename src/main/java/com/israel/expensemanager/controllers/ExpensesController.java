@@ -49,7 +49,7 @@ public class ExpensesController {
     }
 
     @PatchMapping("/{oldExpense}")
-    public ResponseEntity<ExpensesModel> updateExpense(@PathVariable UUID oldExpense,@AuthenticationPrincipal UserModel user,@RequestBody @Valid UpdateDTO data) {
+    public ResponseEntity<ExpensesModel> updateExpense(@PathVariable UUID oldExpense, @AuthenticationPrincipal UserModel user,@RequestBody @Valid UpdateDTO data) {
         return ResponseEntity.status(HttpStatus.OK).body(expensesService.updateExpense(oldExpense ,user.getId(), data));
     }
 
