@@ -54,11 +54,6 @@ public class ExpensesService {
     }
 
 
-    public BigDecimal sumExpenses(UUID loggedUserId) {
-        return expensesRepository.sumAllExpensesByUser(loggedUserId);
-    }
-
-
     public BigDecimal moneyLeft(UUID loggedUserId, BigDecimal userTotalMoney) {
         BigDecimal totalExpenses = expensesRepository.sumAllExpensesByUser(loggedUserId);
         return userTotalMoney.subtract(totalExpenses);

@@ -17,13 +17,6 @@ public interface ExpensesRepository extends JpaRepository<ExpensesModel, UUID> {
     Optional<ExpensesModel> findById(@NonNull UUID id);
 
     @Query("""
-    SELECT COALESCE(SUM(e.price), 0)
-    FROM Expenses e
-    WHERE e.user.id = :userId
-    """)
-    BigDecimal sumAllExpensesByUser(@Param("userId") UUID userId);
-
-    @Query("""
     SELECT e
     FROM Expenses e
     WHERE e.user.id = :userId

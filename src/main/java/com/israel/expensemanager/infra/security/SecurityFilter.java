@@ -26,17 +26,25 @@ public class SecurityFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         return path.equals("/auth/login")
-                || path.equals("auth/register");
+                || path.equals("/auth/register");
     }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        if (path.equals("/auth/login") || path.equals("/auth/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = recoverToken(request);
 
         if (token == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
             return;
         }
+
 
         try {
             String username = tokenService.validateToken(token);
@@ -51,8 +59,10 @@ public class SecurityFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            SecurityContextHolder.clearContext();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
+
     }
 
 

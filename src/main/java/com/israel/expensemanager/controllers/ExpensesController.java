@@ -33,11 +33,6 @@ public class ExpensesController {
         return ResponseEntity.status(HttpStatus.OK).body(expensesService.getExpenses(user.getId()));
     }
 
-    @GetMapping("/sum")
-    public ResponseEntity<BigDecimal> sumExpenses(@AuthenticationPrincipal UserModel user) {
-        return ResponseEntity.status(HttpStatus.OK).body(expensesService.sumExpenses(user.getId()));
-    }
-
     @GetMapping("/moneyleft")
     public ResponseEntity<BigDecimal> moneyLeft(@AuthenticationPrincipal UserModel user, @RequestParam BigDecimal userTotalMoney) {
         return ResponseEntity.status(HttpStatus.OK).body(expensesService.moneyLeft(user.getId(), userTotalMoney));
