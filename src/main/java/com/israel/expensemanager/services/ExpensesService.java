@@ -54,6 +54,12 @@ public class ExpensesService {
     }
 
 
+    public BigDecimal moneyLeft(UUID loggedUserId, BigDecimal userTotalMoney) {
+        BigDecimal totalExpenses = expensesRepository.sumAllExpensesByUser(loggedUserId);
+        return userTotalMoney.subtract(totalExpenses);
+    }
+
+
     public List<ExpensesModel> findExpensesBetweenDates(UUID loggedUserId, ExpensesDatesDTO data) {
         if(data.beginDate().isAfter(data.lastDate())) {
             throw new InvalidDateRangeException("invalid date range");
