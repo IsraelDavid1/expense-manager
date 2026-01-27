@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 public interface ExpensesRepository extends JpaRepository<ExpensesModel, UUID> {
     @NonNull
     Optional<ExpensesModel> findById(@NonNull UUID id);
