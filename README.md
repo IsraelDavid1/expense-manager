@@ -2,8 +2,6 @@
 
 
 [![LinkedIn][linkedin-shield]][linkedin-url]
-[![project_license][license-shield]][license-url]
-[![Issues][issues-shield]][issues-url]
 
 
 
@@ -173,10 +171,6 @@ Project Link [https://github.com/IsraelDavid1/expense-manager](https://github.co
 <!-- Shields.io badges. You can a comprehensive list with many more badges at: https://github.com/inttter/md-badges -->
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/israel-david-da-silva/
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/IsraelDavid1/expense-manager/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/IsraelDavid1/expense-manager/blob/master/LICENSE
 
 
 
